@@ -1,0 +1,12 @@
+---
+title: "DataViz Makeover 1"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## The Data Visualisation
+
+![](img/Picture1.png)

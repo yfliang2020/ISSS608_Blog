@@ -1,5 +1,17 @@
 [
   {
+    "path": "posts/DataViz1/",
+    "title": "DataViz Makeover 1",
+    "description": {},
+    "author": [],
+    "date": "2021-05-30",
+    "categories": [],
+    "contents": "\r\nThe Data Visualisation\r\n\r\n\r\n\r\n\r\n",
+    "preview": {},
+    "last_modified": "2021-05-30T04:01:57+08:00",
+    "input_file": "DataViz1.knit.md"
+  },
+  {
     "path": "posts/welcome/",
     "title": "Welcome to My Blog",
     "description": "Welcome to our new blog, My Blog. We hope you enjoy \nreading what we have to say!",
@@ -13,7 +25,7 @@
     "categories": [],
     "contents": "\r\n\r\n\r\n\r\n",
     "preview": {},
-    "last_modified": "2021-05-22T09:41:47+08:00",
+    "last_modified": "2021-05-30T03:55:03+08:00",
     "input_file": {}
   }
 ]
