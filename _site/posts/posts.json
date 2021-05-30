@@ -2,30 +2,30 @@
   {
     "path": "posts/DataViz1/",
     "title": "DataViz Makeover 1",
-    "description": {},
+    "description": "DataViz Makeover 1 for ISSS608: Visual Analytics",
     "author": [],
     "date": "2021-05-30",
     "categories": [],
-    "contents": "\r\nThe Data Visualisation\r\n\r\n\r\n\r\n\r\n",
+    "contents": "\r\n1 Critique of Original Visualization\r\nThe original visualization is shown below.\r\n\r\n1.1 Clarity\r\nThe title and the y-axis of the graph does not show the unit of the trade value. In the dataset, the trade value has two kinds of units, which is thousand dollars and million dollars. So it might make people confused if we do not specify the unit of the value.\r\nThe label of x-axis is month of period, but in fact the x-axis shows different years not different month.\r\nThe original visualization used area chart which could misleading people to compare the height of import and export in the chart. However, the chart has two different y-axis for import and export and their scale is also different.\r\n1.2 Aesthetic\r\nThe title and the graph are not aligned.\r\nThe width of charts for different regions are not the same.\r\nThe x-axis uses tick marks on categorical scale.\r\nThe color of the area makes the overlapped part of the trend line not very clear to see.\r\nThe two different y-axis for import and export are not differentiated by color.\r\n2 Makeover Design\r\nThe makeover design is shown below:\r\n\r\n2.1 Clarity\r\nThe unit of the trading values is added to the sheet title, which is thousand dollars. And all the numerical data in the dataset is already convert to this unit.\r\nThe x-axis represent month and the label of axis is revised accordingly.\r\nInstead of using area chart, the makeover design used lines to represent the data.\r\nThe average reference lines are added to make it easier to see the scale of the data.\r\nA tooltip is added to highlight the key information at each data point.\r\n2.2 Aesthetic\r\nThe title and the graph are set to be aligned.\r\nThe width of charts for different regions are set to be the same.\r\nThe x-axis removed original tick marks.\r\nThe two different y-axis for import and export are differentiated by using different color.\r\n3 Proposed Visualization\r\nThe makeover visualization on Tableau Public is published here.\r\n4 Step-by-step Guide\r\nRemove the text information above T1 and T2\r\n\r\nRemain data from 2019 to 2021 and delete the rest part of the data\r\n\r\nSelect all the data, click on the yellow exclamation mark and choose Convert to Number to convert the original data from text to number\r\n\r\nMove the top seven statistic rows to other new sheets, remove those rows from original sheet and rename the sheets\r\n\r\nRemain the rows of the top six trading countries and delete the rest of the data. Transpose the table and rename the columns as shown below\r\n\r\nCombine the Import table, Export table and statistic information tables into one big table\r\n\r\nImport the processed data into Tableau\r\n\r\nAdd Import to Rows and Month to Columns\r\n\r\nChange the Marks from Automatic to Line\r\n\r\nAdd Export to Rows near by Import and add Region to Columns\r\n\r\nFit the width for the worksheet and adjust the size of the axis a little bit\r\n\r\nClick on the small triangle on the right of Measure Names, choose Edit Colours and change the color of Import line to red to make it looks clear\r\n\r\nRight click on the Import y-axis, choose Format, select the font dropdown list under Default and change it to red. Repeat the same thing to change the color of Export y-axis to blue\r\n\r\nRight click on the Import y-axis, choose Add Reference Line, remain the Value as Average, change the dropdown list of Label to Custom and format it as Avg and the average value. Change Line to a thin dotted line and change the color of the line to a lighter red. Repeat the same things for Export y-axis.\r\n\r\nSelect SUM(Import) in the Marks panel and click on Tooltip. Format the content of tooltip as shown below and use different font size and color to highlight the key information. Repeat the same things for SUM(Export).\r\n\r\nHide Field Labels for Columns\r\n\r\nRename the sheet title\r\n\r\nSort the Month in a correct order\r\n\r\nChange the sheet name\r\n\r\nCreate a new sheet and rename it Imports of Asia and America\r\n\r\nAdd Asia Imports and America Imports to Rows and add Month to Columns. Change Marks from Automatic to Line\r\n\r\nFit Width and resize the graph a little bit\r\n\r\nChange the color of y-axis according to the color of the lines\r\n\r\nFormat the content of tooltip as following\r\n\r\nHide Field Labels for Columns\r\n\r\nRename the sheet title\r\n\r\nSort the Month in a correct order\r\n\r\nRepeat the same things to create a new sheet for Asia Exports and America Exports\r\n\r\nRepeat the same things to create a new sheet for Total Merchandise Imports and Total Merchandise Exports\r\n\r\nCreate a Dashboard and put the four worksheets created above into it. Set the Size as Automatic\r\n\r\n5 Derived Insights\r\nWe can see that there is a significant decline trend between 2020 March and 2020 May both in Asia and worldwide. For the total merchandise trade, the trade imports decreased around 22% and trade exports decreased around 20%, which changed just within two months. This might due to the breakout of Covid throughout the world. And we can refer to the chart of Mainland China, there is also a dramatic decrease from the end of 2019 to the first quarter of 2020, which may due to that the breakout of Covid in China is earlier than in the other countries.\r\nThe scale of imports and exports of Hong Kong is very different, the imports of Hong Kong between 2019 and 2021 is only around 1M thousand dollars, but the exports reached around 5M thousand dollars, nearly 5 times of imports. This may because Hong Kong is a free-trade port and its trading policy is much different with China Mainland, which makes it easier to do some export trading.\r\nObserving the chart of US, we can see that the exports of US increased rapidly from the end of 2019 to early 2020, compared with 2019 September, the exports increased more than 56%. One reason may be that the government published several policies to increase the exports to China in order to reduce the trading deficit.\r\n\r\n\r\n\r\n",
     "preview": {},
-    "last_modified": "2021-05-30T04:01:57+08:00",
+    "last_modified": "2021-05-30T23:33:31+08:00",
     "input_file": "DataViz1.knit.md"
   },
   {
     "path": "posts/welcome/",
-    "title": "Welcome to My Blog",
-    "description": "Welcome to our new blog, My Blog. We hope you enjoy \nreading what we have to say!",
+    "title": "ISSS608 Blog",
+    "description": "Course blog for ISSS608 Visual Analytics.",
     "author": [
       {
-        "name": "Nora Jones",
-        "url": "https://example.com/norajones"
+        "name": "Liang Yingfang",
+        "url": {}
       }
     ],
     "date": "2021-05-22",
     "categories": [],
     "contents": "\r\n\r\n\r\n\r\n",
     "preview": {},
-    "last_modified": "2021-05-30T03:55:03+08:00",
-    "input_file": {}
+    "last_modified": "2021-05-30T22:55:33+08:00",
+    "input_file": "welcome.knit.md"
   }
 ]

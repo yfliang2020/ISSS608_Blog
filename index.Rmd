@@ -1,5 +1,5 @@
 ---
-title: "ISSS608_Bloguser"
+title: "My Post"
 site: distill::distill_website
 listing: posts
 ---
