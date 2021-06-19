@@ -1,0 +1,245 @@
+---
+title: "DataViz Makeover 2"
+description: |
+  DataViz Makeover 2 for ISSS608: Visual Analytics
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## 1 Critique of Original Visualization
+The original visualization is shown below.
+
+![](img/index.jpg)
+
+### 1.1	Clarity
+- The graph has no title to show what this graph is mainly represent.
+- There is no legend or timeline indicates which period of data this graph shows.
+- For the tooptip of each bubble, it does not indicate the value on it represents imports or exports or total value or something else.
+- The text in the blue box compares the trade value of Singapore with Mainland China since 2009 and United States since 2006, so it actually compares the trade value of these two countries in a long dynamic period. However, this graph is a static graph, it can not reflect the change across a period.
+
+### 1.2	Aesthetic
+- Because those bubbles are not transparent, when two or more bubbles overlap, the center point of some bubbles cannot be seen. For example, since the bubble of United States and EU overlap with each other, we cannot really tell the center point of EU falls in which section since it is covered by the bubble of United States.
+- In this graph, the size of every bubble represents the total trade value with respect to the country, but for some countries their sizes look pretty similar. For example, the bubble size of Korea, Japan and Indonesia are pretty much the same, so it is difficult to compare which of them has larger trade value.
+- No stick mark is used even though the imports and exports are on continuous scale, which makes it difficult to tell the imports and exports of some country. For example, it is not very clear if the exports of Thailand is over 20 billion dollars or not.
+
+## 2 Makeover Design
+The makeover design is shown below:
+
+![](img/design.jpg)
+
+### 2.1	Clarity
+- A title is added to indicate that this graph is about Singapore merchandise trade with respect to different month from 2011 to 2020.
+- A page controller is added so that the graph can show the change of imports and exports in a month or in a period of time. And since animation is added, we can see the change from one month to another month in a slow-motion way, which makes us easier to capture the change.
+- The content of the tooltip is well formatted to reflect the imports, exports and total trade value.
+
+### 2.2	Aesthetic
+- All the circles in the graph are transparent and a light color border is added so that even though two circles overlap we can still see their size and border clearly.
+- Considering it might be difficult to differentiate the size of two countries with similar value, color is also added to the graph so that we can also compare the value of different circle by their color as well.
+- A grid is added to the background so that it would be clearer for us to see the rough upper bound and lower bound for each country.
+
+## 3 Proposed Visualization
+The makeover visualization on Tableau Public is published [here](https://public.tableau.com/app/profile/yingfang.liang/viz/dataviz2_16240930416840/SingaporeMerchandiseTradebyRegion).
+
+## 4 Step-by-step Guide
+1.	Open the downloaded dataset “outputFile.xlsx” in Excel. Remove the text information above and below T1 and T2.
+
+![](img/1.jpg)
+
+2.	Save the processed dataset and import it into Tableau, drag T1 to the Data Source panel.
+
+![](img/2.jpg)
+
+3.	Click on the small triangle in the upper right corner of column Variables, select “Split”, then the column Variables is automatically split into two separate columns.
+
+![](img/3.jpg)
+ 
+4.	Click on the small triangle in the upper right corner of column Variables, select “Hide” to hide this column. Repeat the same thing for column Varables – Split 2 to hide it as well.
+
+![](img/4.jpg)
+ 
+5.	Rename the column Varables – Split 1 as “Country”.
+
+![](img/5.jpg)
+ 
+6.	Retain those months between January 2011 and December 2020 and hide all the other month columns.
+
+![](img/6.jpg)
+ 
+7.	Select column 2011 Jan, go to the most right side of this table, press “shift” on the keyboard and select column 2020 Dec. Click on the small triangle in the upper right corner of column 2020 Dec, select “Pivot” to pivot these columns to rows.
+
+![](img/7.jpg)
+ 
+8.	Rename the column Pivot Field Names as “Month” and the column Pivot Field Values as “Imports”.
+
+![](img/8.jpg)
+ 
+9.	Click on “Abc” in the upper left corner of column Month, select “Date” to change the data type of this column from String to Date.
+
+![](img/9.jpg)
+ 
+10.	Click on “Abc” in the upper left corner of column Imports, select “Number(decimal)” to change the data type of this column from String to Number.
+
+![](img/10.jpg)
+ 
+11.	Go to Worksheet Sheet 1, put Month on Columns, click on the small triangle on the right side and select Day to represent the data according to each day of the year.
+
+![](img/11.jpg)
+ 
+12.	Put Imports on Rows, click on the small triangle on the right side and select Measure, choose “Sum” to represent the imports according to sum of the imports.
+
+![](img/12.jpg)
+ 
+13.	Put Country to Filters panel, select the 10 countries showed on the original visualization and click on OK.
+
+![](img/13.jpg)
+ 
+14.	Put Country on Columns.
+ 
+![](img/14.jpg)
+ 
+15.	Click on Analysis on the navigation bar, select View Data and choose Export All. Name the processed csv file as “Imports by Region” and then click on Save.
+
+![](img/15.jpg)
+ 
+16.	Repeat the same operations to process the table T2 to a new csv table “Exports by Region”.
+
+![](img/16.jpg)
+ 
+17.	Import the processed dataset Imports by Region and Exports by Region into Tableau.
+
+![](img/17.jpg)
+ 
+18.	Click on the small triangle on the right side of “Imports by Region.csv”, select open to build a join relationship.
+
+![](img/18.jpg)
+ 
+19.	Drag Exports by Region.csv to the join canvas.
+
+![](img/19.jpg)
+ 
+20.	Click the join icon and select the “Add new join clause” dropdown list and then add Day of Month to the join clause.
+
+![](img/20.jpg)
+ 
+21.	Rename column Sum of Exports as Exports and column Sum of Imports as Imports.
+
+![](img/21.jpg)
+ 
+22.	Click on the “Abc” on the upper left of the two Day of Month columns and change the data type from String to Date.
+
+![](img/22.jpg)
+ 
+23.	Hide one Country column and one Day of Month column.
+
+![](img/23.jpg)
+ 
+24.	Rename the column Day of Month as Month.
+
+![](img/24.jpg)
+ 
+25.	Because in the original dataset, the unit of European Union is Million Dollars while the unit of all the other countries is Thousand Dollars, we need to create a new calculated field to make the value of all these countries in the same unit. Go to Worksheet Sheet 1, click on Analysis on the navigation bar and select “Create Calculated Field”. Create a calculated field called “Imports (Thousand Dollars)” which convert the unit of all countries’ imports to Thousand Dollars.
+
+![](img/25.jpg)
+ 
+26.	Repeat the same things to create a calculated field called “Exports (Thousand Dollars)” which convert the unit of all countries’ exports to Thousand Dollars.
+
+![](img/26.jpg)
+ 
+27.	Create a calculated field called “Total Trade” which is the summation of imports and exports, then click OK.
+
+![](img/27.jpg)
+ 
+28.	Put Imports (Thousand Dollars) on Rows and Exports (Thousand Dollars) on Columns.
+
+![](img/28.jpg)
+ 
+29.	Put Country on Detail at the Marks panel.
+
+![](img/29.jpg)
+ 
+30.	Put Total Trade on Size at the Marks panel.
+
+![](img/30.jpg)
+
+31.	Adjust the size to be a little bit larger to make the difference between different countries clearer.
+
+![](img/31.jpg)
+
+32.	Change the type of mark to be Circle at the Marks panel.
+
+![](img/32.jpg)
+
+33.	Put Total Trade on Color at the Marks Panel.
+
+![](img/33.jpg)
+
+34.	Click Color at the Marks Panel and then click Edit Colours. Change the color schema to Red-Blue Diverging and check the Use Full Colour Range check box, then click OK.
+
+![](img/34.jpg)
+
+35.	Click Color at the Marks Panel and then change the opacity from 100% to 80%. Select the Border dropdown list and add a white border to the circle to make the overlap part to be clear to see.
+
+![](img/35.jpg)
+
+36.	Create a calculated field called Rank by Imports to calculate the rank of different countries according to their imports.
+
+![](img/36.jpg)
+
+37.	Create a calculated field called Rank by Exports to calculate the rank of different countries according to their exports.
+
+![](img/37.jpg)
+
+38.	Put Month on the Pages panel, click the small little triangle on the right side and select month to represent Month by the month of year.
+
+![](img/38.jpg)
+
+39.	Put Rank by Imports and Rank by Exports on Tooltip.
+
+![](img/39.jpg)
+
+40.	Click the small triangle on the right side of Rank by Imports and Rank by Exports, go to Compute Using and then select Country.
+
+![](img/40.jpg)
+
+41.	Click Tooltip on the Marks panel and format the content of tooltip as shown below.
+
+![](img/41.jpg)
+
+42.	Put Country on Lable and check the check box “Allow lables to overlap other marks”.
+
+![](img/42.jpg)
+
+43.	Right click on the y-axis and select Add Reference Line. Choose Median for the second dropdown list under Value, select Custom for Lable and format the content of label as Median=Value. Format the reference line as a thin dotted line and change the color to light grey, then click OK.
+
+![](img/43.jpg)
+
+44.	Repeat the same things to add a reference line on the x-axis.
+
+![](img/44.jpg)
+
+45.	Click Format on the navigation bar and then select Animations, turn on the switch for animation and set Duration as 2.00 seconds.
+
+![](img/45.jpg)
+
+46.	Rename the sheet name as “Singapore Merchandise Trade by Region” and the final visualization is done.
+
+![](img/46.jpg)
+
+
+## 5 Derived Insights
+
+1.	We can see that in the early part of this 10-years period, the top trading country of Singapore was Malaysia. However, in around 2015, the total trading value for China started to exceed Malaysia and both the imports and exports show an increasing trend. Since 2018, the deficit with China became more significant.
+
+![](img/i1.jpg)![](img/i2.jpg)
+
+2.	Since 2018, Singapore started to have more merchandise trade with some west countries like US and EU. With the increase of the total trade value at the same time, the exports of these two countries fluctuate around the median while the imports have a rising trend, which shows Singapore is in deficit with these two countries.
+
+![](img/i3.jpg)
+
+3.	Hong Kong is always a net exporter during this 10-years period. The exports with Hong Kong shows an overall growing trend and between 2019 and 2020 the trade surplus growth is more significant.
+
+![](img/i4.jpg)
