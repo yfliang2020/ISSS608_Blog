@@ -345,6 +345,32 @@ All the discrepancies between data discussed in the previous part can effect the
 may stop by one location for a long time like hours and only make one purchase in between, in this senario, the purchase activity and the driving 
 records may not be in the same timeslot. For those cards we can not successfully matched a owner, we need to analyze its activity pattern with each gps path to find the answer.
 
+## Question 4
+
+### Potiential Relationship
+
+Elsa Orilla (car id 7) and Brand Tempestad (car id 33) may be in a relationship. They show up at Chostus Hotel together multiple times 
+(in Jan 8, 10, 14, 17). According to the gps data, we can see that both of them drive their own car and most of the time they don't come from 
+the same places, so it is more likely that they have an affair instead of being couples.
+
+![](img/9.jpg)![](img/10.jpg)
+
+## Question 5
+
+### Suspicious Activities
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
