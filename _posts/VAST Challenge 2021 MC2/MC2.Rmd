@@ -138,33 +138,110 @@ ggplot(data = most_pop_transaction,
   ylab("Price")
 ```
 
-## 2.2 Matching credit card and loyalty
+## 2.2 Matching Credit Card and Loyalty Card
+
+Since credit card and loyalty card have different format of timestamp, we firstly create a new column called date to solve this inconsistency. Then we use inner join to combine the two types of card into one card_dat.
+
+```{r echo=TRUE}
+cc_data$timestamp <- strptime(cc_data$timestamp, format='%m/%d/%Y %H:%M')
+loyalty_data$timestamp <- strptime(loyalty_data$timestamp, format='%m/%d/%Y')
+
+cc_data <- cc_data %>%
+  mutate(cc_data, date = strftime(cc_data$timestamp, format='%m/%d/%Y'))
+loyalty_data <- loyalty_data %>%
+  mutate(loyalty_data, date = strftime(loyalty_data$timestamp, format='%m/%d/%Y'))
+
+card_data <- cc_data %>% inner_join(loyalty_data,
+                                    by=c('location','price','date'))
+```
+
+According to the data we can see that not every used both credit card and loyalty card, so we need to add those credit card data without corresponding loyalty card to this card_data.
+
+```{r echo=TRUE}
+all_card_data <- merge(card_data, cc_data, all.y=TRUE) %>%
+  select(timestamp,location, price,last4ccnum,date,loyaltynum)
+```
+
+## 2.3 GPS Path Visulaization
+
+To detect the suspicious activities of employees, a gps data visualization is designed to show the activity path for different car id (car owner).
+
+```{r}
+bgmap <- raster("Geospatial/MC2-tourist.tif")
+
+Abila_st <- st_read(dsn = "Geospatial",
+                    layer = "Abila")
+
+gps <- read_csv("gps.csv")
 
 
+gps$Timestamp <- date_time_parse(gps$Timestamp,
+                                 zone = "",
+                                 format = "%m/%d/%Y %H:%M:%S")
+gps$day <- as.factor(get_day(gps$Timestamp))
+gps$id <- as_factor(gps$id)
+
+gps_sf <- st_as_sf(gps, 
+                   coords = c("long", "lat"),
+                   crs= 4326)
 
 
+gps_path <- gps_sf %>%
+  group_by(id, day) %>%
+  summarize(m = mean(Timestamp), 
+            do_union=FALSE) %>%
+  st_cast("LINESTRING")
 
 
+gps_path_selected <- gps_path %>%
+  filter(id == 1)
 
+tmap_mode("view")
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r = 1,g = 2,b = 3,
+       alpha = NA,
+       saturation = 1,
+       interpolate = TRUE,
+       max.value = 255) +
+  tm_shape(gps_path_selected) +
+  tm_lines(col = "day",
+           lwd = 3) 
+```
+## 2.4 Matching Car Data and Transaction Data
 
+To detect the owner of each card, the gps data and card data is joined together by the timeslot their timestamp belonging to. And to get the owner name of each car, the car assignment data is imported to merge together.
 
+```{r echo=TRUE}
+gps <- read_csv("gps.csv")
+gps$Timestamp <- date_time_parse(gps$Timestamp,
+                                 zone = "",
+                                 format = "%m/%d/%Y %H:%M:%S")
+gps_data <- gps %>%
+  mutate(gps, hour = strftime(gps$Timestamp, format='%m/%d %H'))
 
+all_card_data = merge(card_data, cc_data, all.y=TRUE) 
+all_card_data <- all_card_data %>% 
+  mutate(all_card_data, hour = strftime(all_card_data$timestamp, format='%m/%d %H'))
+all_card_data <- all_card_data %>%
+  select(timestamp,location, price,last4ccnum,date,loyaltynum, hour)
 
+gps_card_data <- merge(gps_data, all_card_data, by='hour', all.y=TRUE)
 
+card_groups <- group_by(gps_card_data, last4ccnum, id)
+card_match = summarise(card_groups, n())
 
-# 3 Visualization
+distinct_card_match <- group_by(card_match, last4ccnum) %>% 
+  filter(`n()` == max(`n()`))
 
-# 4 Answer
+car_assignment = read_csv("car-assignments.csv")
+colnames(car_assignment)[3] <- "id"
 
+total_match = inner_join(car_assignment, distinct_card_match, by="id") %>% 
+  select(LastName, FirstName, id, CurrentEmploymentType, CurrentEmploymentTitle, last4ccnum)
 
-
-
-
-
-
-
-
-
+final_match = inner_join(total_match, all_card_data, by="last4ccnum") 
+final_match <- distinct(final_match, id, last4ccnum, loyaltynum, .keep_all = TRUE)
+```
 
 
 
