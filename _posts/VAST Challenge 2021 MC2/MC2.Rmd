@@ -96,7 +96,9 @@ ggplot(data = transaction_data,
   ylab("Location") 
 ```
 
-A heatmap is used here to show the distribution of transactions in different days to detect the peak hour of different shops.
+## 2.2 Popular Time Period
+
+A heatmap is used here to show the distribution of transactions in different days to detect the peak hour of different shops. We get the popular location names from the result of previous part and select the corresponding transaction data. Two new columns hour and day is added to work as the x-axis and y-axis of this graph.
 
 ```{r echo = TRUE}
 name <- names(sort(table(transaction_data$location), decreasing = TRUE)[1])
@@ -119,7 +121,9 @@ ggplot(data = values,
   labs(fill = "Number of Orders")
 ```
 
-Since we want to detect anomalies in these locations, we not only cares about their total sales but also want to know the account of each order. A box plot is designed to show the distribution of price of each order.
+## 2.3 Order Price Distribution
+
+Since we want to detect anomalies in these locations, we not only cares about their total sales but also want to know the amount of each order. A box plot is designed to show the distribution of price of each order. A new column day is added since we want to see that distribution in different days. 
 
 ```{r echo = TRUE}
 most_pop_transaction <- transaction_data[transaction_data$location == name,]
@@ -138,9 +142,9 @@ ggplot(data = most_pop_transaction,
   ylab("Price")
 ```
 
-## 2.2 Matching Credit Card and Loyalty Card
+## 2.4 Matching Credit Card and Loyalty Card
 
-Since credit card and loyalty card have different format of timestamp, we firstly create a new column called date to solve this inconsistency. Then we use inner join to combine the two types of card into one card_dat.
+Each credit card record should have a corresponding loyalty card record for it.Since credit card and loyalty card have different format of timestamp, we firstly create a new column called date to solve this inconsistency. Then we use inner join to combine the two types of card into one card_data.
 
 ```{r echo=TRUE}
 cc_data$timestamp <- strptime(cc_data$timestamp, format='%m/%d/%Y %H:%M')
@@ -155,16 +159,16 @@ card_data <- cc_data %>% inner_join(loyalty_data,
                                     by=c('location','price','date'))
 ```
 
-According to the data we can see that not every used both credit card and loyalty card, so we need to add those credit card data without corresponding loyalty card to this card_data.
+According to the data, we can see that not everyone used both credit card and loyalty card, so we need to add those credit card data without corresponding loyalty card to this card_data.
 
 ```{r echo=TRUE}
 all_card_data <- merge(card_data, cc_data, all.y=TRUE) %>%
   select(timestamp,location, price,last4ccnum,date,loyaltynum)
 ```
 
-## 2.3 GPS Path Visulaization
+## 2.5 GPS Path Visulaization
 
-To detect the suspicious activities of employees, a gps data visualization is designed to show the activity path for different car id (car owner).
+To detect the suspicious activities of employees, a gps data visualization is designed to show the activity path for different car id (car owner). A map picture of Abila is used as the background image and we draw the path of different cars in different days on it.
 
 ```{r}
 bgmap <- raster("Geospatial/MC2-tourist.tif")
@@ -207,9 +211,13 @@ tm_shape(bgmap) +
   tm_lines(col = "day",
            lwd = 3) 
 ```
-## 2.4 Matching Car Data and Transaction Data
 
-To detect the owner of each card, the gps data and card data is joined together by the timeslot their timestamp belonging to. And to get the owner name of each car, the car assignment data is imported to merge together.
+## 2.6 Matching Car Data and Transaction Data
+
+Since employees are happy to use company cars for both personal and business cases, we can assume that most of the purchase activities should 
+have gps records before and after them. We firstly extract the timeslot information from both gps data and card data by taking the hour of 
+each timestamp, then we try to combine these two kinds of data lies in the same timeslots. After merging the two data table together, 
+for each card, we count the number of matched records for each car id and rank them decreasingly. The car id with the largest number of matched records is most likely to be the owner of the card. Finally, we join this data with the car assignment data to get the personal information of each car owners.
 
 ```{r echo=TRUE}
 gps <- read_csv("gps.csv")
@@ -242,6 +250,108 @@ total_match = inner_join(car_assignment, distinct_card_match, by="id") %>%
 final_match = inner_join(total_match, all_card_data, by="last4ccnum") 
 final_match <- distinct(final_match, id, last4ccnum, loyaltynum, .keep_all = TRUE)
 ```
+
+## 2.7 Transaction Location Distribution
+
+In order to detect the daily routine and frequently show-up locations for different people (card owner), we draw the location names in a timeline for different date. This graph can be used together with the gps path visualization.
+
+```{r echo=TRUE}
+cc_data <- cc_data %>%
+  mutate(cc_data, date = strftime(cc_data$timestamp, format='%m/%d')) %>%
+  mutate(cc_data, time = strftime(cc_data$timestamp, format='%H:%M'))
+
+cc_data_selected <- cc_data %>% 
+  filter(last4ccnum == 9551)
+
+ggplot(cc_data_selected, 
+       aes(x = time, 
+           y = date,
+           fill = date)) +
+  geom_point(
+    aes(data_id = last4ccnum),
+        size = 0.1) + 
+  geom_text(aes(label = location),
+            size = 3) +
+  theme(axis.text.x = element_text(angle = 270),
+        legend.position = "none")
+```
+
+# 3 Answer
+
+## Question 1
+
+### Most Popular Location
+
+According to the total number of transactions, we can see that the top-3 popular locations in this area are Katerina's Cafe,
+Hippokampos and Guy's Gyros.
+
+![](img/1.jpg)
+
+When we refer to the heatmap of their transaction distribution, we found that they basically share the same popular timeslot.
+13 pm and 20 pm are the peak hour for these three shops, for Hippokampos, it is a little bit less popular compared with 
+the other two shops in dinner time. For Katerina's Cafe and Hippokampos, their sales do not have much difference between weekday and weekend. 
+However, Guy's Gyros seems more popular in weekdays as shown in the graph.
+
+![](img/2.jpg)
+![](img/3.jpg)
+![](img/4.jpg)
+
+### Anomalies 
+
+After go through all the boxplots for price of orders in different locations, we can find Frydos Autosupply n' More has one very 
+strange transaction in Jan 13. The average order price is around 200 to 300 in this location, but we can see the price of 
+this suspicious transaction reached 10000, which is nearly 50 times of the average amount. If this is not caused by operating error, then 
+that may involved money laundering for those kidnappers.
+
+![](img/5.jpg)
+
+## Question 2
+
+### Combine Card Data and Vehicle Data
+
+![](img/6.jpg)
+
+The suspicious transaction we detected in question 1 is made by credit card 9551. After visualizing the locations this person 
+frequently goes, we found one daily routine of this person is to stop off at Hallowed Grounds to grab some coffee before work. 
+Since we don't successfully match this credit card with its corresponding car owner, we can only match the daily activity 
+pattern of this person with the gps path data and the car owner of car 8 (Lucas Alcazer) is the most likely one.
+
+![](img/7.jpg)
+
+However, according to the gps path data, we found that Lucas has never been to Frydos Autosupply n' More during these 14 days. And when we refer to the previous graph again, it shows that this person stop his coffee routine from Jan 10 to Jan 13. So if we combine the information of these 
+two kinds of data together, it indicates this card may not be used by its original owner from Jan 10 to Jan 13.
+
+### Discrepancies between Data
+
+1. Not every one use both credit card and loyalty card or always use them at the same time, so we can not always match the transactions of 
+these two cards together.
+
+2. Some people may not always go out by driving their own car. Sometimes their friends might give them a ride. So we can see some purchase activities without corresponding gps data matching them.
+
+3. The GPS devices of some cars are not working very well. Sometimes there can be some small gaps between gps path without any 
+purchase activities. 
+
+## Question 3
+
+### Identifying Card Owner
+
+The matching result is as shown below:
+
+![](img/8.jpg)
+
+### Uncertainties 
+
+All the discrepancies between data discussed in the previous part can effect the accuracy of this method. Apart from that, sometimes people 
+may stop by one location for a long time like hours and only make one purchase in between, in this senario, the purchase activity and the driving 
+records may not be in the same timeslot. For those cards we can not successfully matched a owner, we need to analyze its activity pattern with each gps path to find the answer.
+
+
+
+
+
+
+
+
 
 
 
