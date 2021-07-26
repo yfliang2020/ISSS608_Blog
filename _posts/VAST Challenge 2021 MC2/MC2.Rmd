@@ -170,7 +170,7 @@ all_card_data <- merge(card_data, cc_data, all.y=TRUE) %>%
 
 To detect the suspicious activities of employees, a gps data visualization is designed to show the activity path for different car id (car owner). A map picture of Abila is used as the background image and we draw the path of different cars in different days on it.
 
-```{r}
+```{r echo=TRUE}
 bgmap <- raster("Geospatial/MC2-tourist.tif")
 
 Abila_st <- st_read(dsn = "Geospatial",
