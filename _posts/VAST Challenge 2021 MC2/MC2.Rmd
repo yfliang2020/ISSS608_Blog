@@ -355,9 +355,15 @@ the same places, so it is more likely that they have an affair instead of being 
 
 ![](img/9.jpg)![](img/10.jpg)
 
+## Question 5
 
+### Suspicious Activities
 
+Nils Calixto (car id 1), Loreto Bodrogi (car id 15), Isia Vann (car id 16) and Minke Mies (car id 24) drives in the late 
+night in Jan 7, 9, 11, 14, 16, nearly every other day. Coincidentally, Loreto, Isia and Minke are all work at the 
+security department.
 
+![](img/11.jpg)![](img/12.jpg)
 
 
 
