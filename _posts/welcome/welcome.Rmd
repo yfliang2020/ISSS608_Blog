@@ -4,7 +4,7 @@ description: |
   Course blog for ISSS608 Visual Analytics.
 author:
   - name: Liang Yingfang
-date: 05-22-2021
+date: 05-23-2021
 output:
   distill::distill_article:
     self_contained: false
